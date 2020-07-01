@@ -1,0 +1,354 @@
+%Packages to include
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{datetime}
+\usepackage{textpos} 
+\usepackage{amsmath}
+\usepackage{xspace}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{hhline}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usepackage{bm}
+\usepackage{ifthen}
+\usepackage{soul}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{ragged2e}
+\usepackage{colortbl}
+\usepackage{etoolbox}
+\usepackage{wasysym}
+%\usepackage{transparent}
+\usetikzlibrary{fit,positioning,calc,shapes,backgrounds}
+\tikzset{every picture/.style={/utils/exec={\sffamily}}}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\newcount\beamer@sectionstartframe
+\beamer@sectionstartframe=1
+\apptocmd{\beamer@section}{\addtocontents{nav}{\protect\headcommand{%
+            \protect\beamer@sectionframes{\the\beamer@sectionstartframe}{\the\c@framenumber}}}}{}{}
+\apptocmd{\beamer@section}{\beamer@sectionstartframe=\c@framenumber\advance\beamer@sectionstartframe by1\relax}{}{}
+\AtEndDocument{\immediate\write\@auxout{\string\@writefile{nav}%
+        {\noexpand\headcommand{\noexpand\beamer@sectionframes{\the\beamer@sectionstartframe}{\the\c@framenumber}}}}}{}{}
+\def\beamer@startframeofsection{1}
+\def\beamer@endframeofsection{1}
+\def\beamer@sectionframes#1#2{%
+    \ifnum\c@framenumber<#1%
+    \else%
+    \ifnum\c@framenumber>#2%
+    \else%
+    \gdef\beamer@startframeofsection{#1}%
+    \gdef\beamer@endframeofsection{#2}%
+    \fi%
+    \fi%
+}
+\newcommand\insertsectionstartframe{\beamer@startframeofsection}
+\newcommand\insertsectionendframe{\beamer@endframeofsection}
+\makeatother
+
+\def\inserttotalsectionframenumber{%
+    \pgfmathparse{(\insertsectionendframe-\insertsectionstartframe+1)}%
+    \pgfmathprintnumber[fixed,precision=2]{\pgfmathresult}%
+}
+
+\def\insertsectionframenumber{%
+    \pgfmathparse{(\insertframenumber-\insertsectionstartframe+1)}%
+    \pgfmathprintnumber[fixed,precision=2]{\pgfmathresult}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand\Wider[2][3em]{%
+\makebox[\linewidth][c]{%
+  \begin{minipage}{\dimexpr\textwidth+#1\relax}%
+  \raggedright#2
+  \end{minipage}%
+  }%
+}
+
+\newcommand\Narrower[2][3em]{%
+\makebox[\linewidth][c]{%
+  \begin{minipage}{\dimexpr\textwidth-#1\relax}%
+  \footnotesize
+  \raggedright#2
+  \end{minipage}%
+  }%
+}
+
+\newcommand\gridhelp{%
+\draw[help lines,xstep=0.02,ystep=0.02] (0,0) grid (1,1);%
+\foreach \x in {0,1,...,9} { \node[anchor=north] at (\x/10,0) {\scriptsize 0.\x}; }%
+\foreach \x in {0,1,...,9} { \node[anchor=south] at (\x/10,1.0) {\scriptsize 0.\x}; }%
+\foreach \y in {0,1,...,9} { \node[anchor=east]  at (0,\y/10) {\scriptsize 0.\y}; }%
+\foreach \y in {0,1,...,9} { \node[anchor=west]  at (1.0,\y/10) {\scriptsize 0.\y}; }%
+}
+
+\newcommand{\arr}[1][UMNMaroon]{%
+    \textcolor{#1}{%
+        \raisebox{0.16\height}{%
+            $\blacktriangleright$%
+        }%
+        \xspace\xspace\xspace%
+    }%
+}%
+
+\newcommand{\HERWIG} {{\textsc{herwig}}\xspace}
+\newcommand{\ttbar}{\ensuremath{t\bar{t}}\xspace}
+\newcommand{\nugun}{\ensuremath{\nu\text{-gun}}\xspace}
+\newcommand{\POWHEG} {{\textsc{powheg}}\xspace}
+\newcommand{\MADGRAPH} {{\textsc{MadGraph}}\xspace}
+\newcommand{\PYTHIA} {{\textsc{pythia}}\xspace}
+\newcommand{\CMSSW} {{\textsc{CMSSW}}\xspace}
+
+\newcommand{\MET}{\ensuremath{E_{\text{T}}^{\text{miss}}}\xspace}
+\newcommand{\MPT}{\ensuremath{p_{\text{T}}^{\text{miss}}}\xspace}
+\newcommand{\HT}{\ensuremath{H_{\text{T}}}\xspace}
+\newcommand{\ET}{\ensuremath{E_{\text{T}}}\xspace}
+\newcommand{\pt}{\ensuremath{p_{\text{T}}}\xspace}
+\newcommand{\NJ}{\ensuremath{N_{\text{J}}}\xspace}
+\newcommand{\MBL}{\ensuremath{M_{\text{b,l}}}\xspace}
+\newcommand{\SNN}{\ensuremath{S_{NN}}\xspace}
+
+\newcommand{\ttnopu}{\ttbar~+~0PU\xspace}
+\newcommand{\ttpu}{\ttbar~+~PU\xspace}
+\newcommand{\ttoot}{\ttbar~+~OOT~PU\xspace}
+\newcommand{\nupu}{\ensuremath{\nu}-gun~+~PU\xspace}
+\newcommand{\pinopu}{\ensuremath{\pi}-gun~+~0PU\xspace}
+\newcommand{\qcdnopu}{QCD~+~0PU\xspace}
+\newcommand{\qcdpu}{QCD~+~PU\xspace}
+\newcommand{\nuoot}{\ensuremath{\nu}-gun~+~OOT~PU\xspace}
+\newcommand{\oot}{out-of-time\xspace}
+\newcommand{\Oot}{Out-of-time\xspace}
+\newcommand{\inti}{in-time\xspace}
+\newcommand{\pu}{pileup\xspace}
+\newcommand{\Pu}{Pileup\xspace}
+\newcommand{\tp}{trigger primitive\xspace}
+\newcommand{\Tp}{Trigger primitive\xspace}
+\newcommand{\tps}{trigger primitives\xspace}
+\newcommand{\Tps}{Trigger primitives\xspace}
+\newcommand{\lowet}{$0.5 < E_{\text{T,RH}} \leq 10.0\;\text{GeV}$\xspace}
+\newcommand{\loweret}{$0.0 < E_{\text{T,RH}} \leq 10.0\;\text{GeV}$\xspace}
+\newcommand{\highet}{$E_{\text{T,RH}} > 10.0\;\text{GeV}$\xspace}
+\newcommand{\mintpet}{$E_{\text{T,TP}} > 0.5\;\text{GeV}$\xspace}
+\newcommand{\reltpet}{$0.5 < E_{\text{T,TP}} < 128\;\text{GeV}$\xspace}
+\newcommand{\ts}{time slice\xspace}
+\newcommand{\tss}{time slices\xspace}
+\newcommand{\tpet}{\ensuremath{E_{\text{T,TP}}}\xspace}
+\newcommand{\rhet}{\ensuremath{E_{\text{T,RH}}}\xspace}
+\newcommand{\tprh}{\ensuremath{E_{\text{T,TP}} / E_{\text{T,RH}}}\xspace}
+\newcommand\bolden[1]{{\bfseries#1}}
+\newcommand\mbolden[1]{{\boldmath\bfseries#1}}
+\newcommand\allbold[1]{{\boldmath\textbf{#1}}}
+
+\newcommand{\iphi}{\ensuremath{i\phi}\xspace}
+\newcommand{\aiphi}{\ensuremath{|i\phi|}\xspace}
+\newcommand{\ieta}{\ensuremath{i\eta}\xspace}
+\newcommand{\aieta}{\ensuremath{|i\eta|}\xspace}
+
+\newcommand{\boldcol}[2]{\textcolor{#1}{\bolden{#2}}}
+\newcommand{\mboldcol}[2]{\textcolor{#1}{\mbolden{#2}}}
+\newcommand\umncell[1]{\cellcolor{UMNMaroon}\mboldcol{UMNGold}{#1}}
+\newcommand{\hlink}[2]{\href{#1}{\beamergotobutton{#2}}}
+\newcommand{\hclip}[3]{\udensdot{#1}{{\href{#2}{\textcolor{#1}{#3}$\,$\ExternalLink{#1}}}}}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
+
+\newcommand{\redact}[1]{\censor{\phantom{#1}}}
+
+\xspaceaddexceptions{()+} 
+
+\newcommand{\URLsymbol}[1]{$\vcenter{\hbox{\scalebox{0.2}{\begin{tikzpicture}
+    \draw[-,line width=3, rounded corners] (0.3,0.3) -- (0.9,0.9) -- (1.1,0.7) -- (0.5,0.1) -- cycle;
+    \draw[-,line width=3, rounded corners,#1] (0,0) -- (0.6,0.6) -- (0.8,0.4) -- (0.2,-0.2) -- cycle;
+    \draw[-,line width=3, rounded corners] (1,0.8) -- (1.1,0.7) -- (0.5,0.1) -- (0.4,0.2);
+\end{tikzpicture}}}}$}
+
+\newcommand{\fade}[1]{%
+    \begin{tikzpicture}
+        \node[inner sep=0pt,inner ysep=2pt,outer sep=0pt] (A) {#1};
+        \filldraw[draw=none,fill=white,fill opacity=0.80] (A.south west) rectangle (A.north east);
+    \end{tikzpicture}\par%
+}%
+
+\newcommand{\cancel}[1]{%
+    \tikz[baseline=(cross.base)]{
+        \node[inner sep=1pt,outer sep=0pt] (cross) {#1};
+        \draw[solid,line width=0.5pt] ([xshift=0pt,yshift=0.0pt]cross.south west) -- ([xshift=0pt,yshift=0.0pt]cross.north east);
+    }%
+}%
+
+\newcommand{\crossout}[1]{%
+    \tikz[baseline=(cross.base)]{
+        \node[inner sep=1pt,outer sep=0pt] (cross) {#1};
+        \draw[solid,line width=0.5pt] ([xshift=0pt,yshift=-0.9pt]cross.west) -- ([xshift=0pt,yshift=-0.9pt]cross.east);
+    }%
+}%
+
+\newcommand{\udensdot}[2]{%
+    \tikz[baseline=(todotted.base)]{
+        \node[inner sep=1pt,outer sep=0pt] (todotted) {#2};
+        \draw[densely dotted,#1] ([xshift=1.5pt,yshift=0.6pt]todotted.south west) -- ([xshift=-1.5pt,yshift=0.6pt]todotted.south east);
+    }%
+}%
+
+\newcommand{\censor}[1]{%
+    \tikz[baseline=(tocensor.base)]{
+        \node[inner sep=1pt,outer sep=0pt] (tocensor) {#1};
+        \begin{scope}[x={(tocensor.south east)},y={(tocensor.north west)}]
+        \filldraw [draw=black,line width=0.05cm,fill=black] (1.0,0.0) rectangle (0.0,1.0);
+        \end{scope}
+    }%
+}%
+
+\newcommand{\ExternalLink}[1]{%
+    \tikz[x=1.2ex, y=1.2ex, baseline=-0.05ex]{% 
+        \begin{scope}[x=1ex, y=1ex]
+            \clip (-0.1,-0.1) 
+                --++ (-0, 1.2) 
+                --++ (0.6, 0) 
+                --++ (0, -0.6) 
+                --++ (0.6, 0) 
+                --++ (0, -1);
+            \path[draw, 
+                line width = 0.5, 
+                rounded corners=0.5,
+                #1] 
+                (0,0) rectangle (1,1);
+        \end{scope}
+        \path[draw, line width = 0.5,#1] (0.5, 0.5) 
+            -- (1, 1);
+        \path[draw, line width = 0.5,#1] (0.6, 1) 
+            -- (1, 1) -- (1, 0.6);
+    }%
+}%
+
+\newcommand{\backupbegin}{
+    \newcounter{finalframe}
+    \setcounter{finalframe}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+    \setcounter{framenumber}{\value{finalframe}}
+}
+
+\let\footnoterule\relax
+
+%UofMN colors
+\definecolor{UMNMaroon}{RGB}{122,0,25}
+\definecolor{UMNLightMaroon}{RGB}{153,0,28}
+\definecolor{UMNDarkMaroon}{RGB}{92,0,19}
+
+\definecolor{UMNGold}{RGB}{255,204,51}
+\definecolor{UMNLightGold}{RGB}{255,215,95}
+\definecolor{UMNDarkGold}{RGB}{191,153,38}
+
+\definecolor{UMNStormy}{RGB}{64,77,91}
+\definecolor{UMNSunny}{RGB}{0,149,182}
+\definecolor{UMNLightGray}{RGB}{213,214,210}
+
+\definecolor{MyRed}{HTML}{E41A1C}
+\definecolor{MyBlue}{HTML}{377EB8}
+\definecolor{MyGreen}{HTML}{4DAF4A}
+\definecolor{MyPurple}{HTML}{984EA3}
+\definecolor{MyOrange}{HTML}{FF7F00}
+
+\definecolor{MyPurple2}{HTML}{756BB1}
+\definecolor{MyGreen2}{HTML}{31A354}
+\definecolor{MyBlue2}{HTML}{3182BD}
+
+\definecolor{Gray1}{HTML}{BDBDBD}
+\definecolor{Gray2}{HTML}{969696}
+\definecolor{Gray3}{HTML}{525252}
+\definecolor{Gray4}{HTML}{252525}
+\definecolor{Gray5}{HTML}{000000}
+
+\definecolor{Blue1}{HTML}{9ECAE1}
+\definecolor{Blue2}{HTML}{6BAED6}
+\definecolor{Blue3}{HTML}{2171B5}
+\definecolor{Blue4}{HTML}{08306B}
+
+\definecolor{Green1}{HTML}{A1D99B}
+\definecolor{Green2}{HTML}{74C476}
+\definecolor{Green3}{HTML}{238B45}
+\definecolor{Green4}{HTML}{00441B}
+
+\definecolor{ttcol}{HTML}{6666CD}
+\definecolor{qcdcol}{HTML}{05C801}
+\definecolor{ttxcol}{HTML}{CD6600}
+\definecolor{othcol}{HTML}{990099}
+\definecolor{fitcol}{HTML}{58D354}
+\definecolor{pullcol}{HTML}{CBCBFE}
+\definecolor{sigcol}{HTML}{FF00FF}
+
+\definecolor{mvasig}{HTML}{439643}
+\definecolor{mvabkg}{HTML}{98C8E3}
+
+\setbeamercolor{structure}{fg = UMNStormy }
+
+\usetheme{Madrid}
+
+\newcommand\titlefooter{%
+\setbeamertemplate{footline}
+{%
+    \leavevmode%
+    \hbox{%
+    \begin{beamercolorbox}[wd=1.000000\paperwidth,ht=2.25ex,dp=1ex]{title in head/foot}%
+      \centering
+      \usebeamerfont{title in head/foot}\insertshorttitle{}
+    \end{beamercolorbox}}%
+    \vskip0pt%
+    \addtocounter{framenumber}{-1}
+}%
+}
+
+\newcommand\mainfooter{%
+\setbeamertemplate{footline}
+{%
+    \leavevmode%
+    \hbox{%
+    \begin{beamercolorbox}[wd=.500000\paperwidth,ht=2.25ex,dp=1ex]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\hspace*{2ex}\noindent\insertshortauthor\hfill
+      \usebeamerfont{title in head/foot}\insertshortsubtitle{}\hspace*{2ex}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.500000\paperwidth,ht=2.25ex,dp=1ex]{section in head/foot}%
+      \usebeamerfont{section in head/foot}\hspace*{2ex}\noindent\insertsection{}\hfill
+      \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+      \insertframenumber{}\hspace*{2ex}
+    \end{beamercolorbox}}%
+    \vskip0pt%
+}%
+}
+
+\setbeamercolor{frametitle}{fg = UMNGold, bg = UMNMaroon }
+\setbeamercolor{title}{fg = UMNGold, bg = UMNMaroon }
+\setbeamercolor{author in head/foot}{fg = UMNGold, bg = UMNDarkMaroon }
+\setbeamercolor{title in head/foot}{fg = UMNGold, bg = UMNMaroon}
+\setbeamercolor{date in head/foot}{fg = UMNGold, bg = UMNLightMaroon}
+\setbeamercolor{section in head/foot}{fg = UMNGold, bg = UMNLightMaroon}
+\setbeamercolor{button}{bg=UMNMaroon,fg=UMNGold}
+
+\setbeamerfont{footnote}{size=\tiny}
+
+\setbeamersize{text margin left=4mm,text margin right=6mm}
+
+\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides
+\setbeamertemplate{enumerate items}[default]
+
+\setbeamercolor{itemize item}{fg = UMNMaroon}
+\setbeamercolor{itemize subitem}{fg = black}
+\setbeamercolor{itemize subsubitem}{fg = UMNMaroon}
+
+\setbeamercolor{enumerate item}{bg = UMNMaroon}
+\setbeamercolor{enumerate subitem}{fg = UMNStormy, bg = black}
+\setbeamercolor{enumerate subsubitem}{bg = UMNMaroon}
+
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}[triangle]
+\setbeamertemplate{itemize subsubitem}{\raisebox{-0.4em}{\scalebox{3.0}{$\cdot$}}}
+
+\setbeamertemplate{itemize/enumerate body begin}{\footnotesize}
+\setbeamertemplate{itemize/enumerate subbody begin}{\scriptsize}
+\setbeamertemplate{itemize/enumerate subsubbody begin}{\tiny}
