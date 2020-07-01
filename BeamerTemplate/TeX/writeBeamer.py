@@ -25,19 +25,22 @@
 # <file extension for figures>                                          #
 #                                                                       #
 # Example usage:                                                        #
-# python writeBeamer.py MySlides 8 .png                                 #
+# python writeBeamer.py -o MySlides -n 8 -e .png                        #
 #########################################################################
 
 
-from sys import argv
+from optparse import OptionParser
 import glob
 
-script, filename, NUM_TILE, ext = argv
+parser = OptionParser()
+parser.add_option("-o", "--output", action="store", type="string", dest="filename",
+    default="main", help="Name of desired output file")
+parser.add_option("-n", "--number", action="store", type="int", dest="NUM_TILE",
+    default="8", help="Number of figures per slide")
+parser.add_option("-e", "--extension", action="store", type="string", dest="ext",
+    default=".png", help="File extension for figures")
 
-# NUM_TILE is the max number of figures on slide
-# Recommended to use 8 at most
-
-# ext is the flie extension for figures, include the dot "."
+(options, args) = parser.parse_args()
 
 class tile:
     name = ""
@@ -92,10 +95,10 @@ def divide_chunk(l, n):
     for i in range(0, len(l), n):
         yield l[i:i+n]
 
-print "Writing new Beamer file %s.tex" % filename
+print "Writing new Beamer file %s.tex" % options.filename
 
 with open("umn_template.tex",'r') as temp:
-    with open(filename + ".tex", 'w') as f:
+    with open(options.filename + ".tex", 'w') as f:
         for line in temp:
             if (line.find("\\end{document} ") == 0): continue
             f.write(line);
@@ -103,12 +106,12 @@ with open("umn_template.tex",'r') as temp:
         l = []
         tiles = []
 
-        for fig in glob.glob("../figures/*" + ext):
+        for fig in glob.glob("../figures/*" + options.ext):
             l.append(fig)
 
         #print l
 
-        l_div = list(divide_chunk( l, int(NUM_TILE) ))
+        l_div = list(divide_chunk( l, int(options.NUM_TILE) ))
         #print l_div
 
         for t in l_div:
