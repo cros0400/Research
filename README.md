@@ -7,12 +7,13 @@ documentation in [writeBeamer.py](BeamerTemplate/TeX/writeBeamer.py) for usage a
 This script will create a text file including the uHTR data pattern based on the mapping file "Lmap_ngHB_N_20200212.txt". This file and similar mapping files can be found at the following [link](https://cms-docs.web.cern.ch/cms-docs/hcaldocs//document/Mapping/Yuan/2020-feb-12/).
 
 Below are the options for using the file:
-  Usage: MakeUHTERpattern.py [options]
 
-  Options:
-    -h, --help          show this help message and exit
+    Usage: MakeUHTERpattern.py [options]
+
+    Options:
+      -h, --help          show this help message and exit
     -c CRATENUM, --crate=CRATENUM
-                        Number of UHTR crate to test
+                          Number of UHTR crate to test
     -u UHTRNUM, --uhtr=UHTRNUM
                         Number of UHTR to test
     -d DEPTH, --depth=DEPTH
