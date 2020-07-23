@@ -11,9 +11,9 @@ Below are the options for using the file:
     Usage: MakeUHTERpattern.py [options]
 
     Options:
-      -h, --help          show this help message and exit
+    -h, --help          show this help message and exit
     -c CRATENUM, --crate=CRATENUM
-                          Number of UHTR crate to test
+                        Number of UHTR crate to test
     -u UHTRNUM, --uhtr=UHTRNUM
                         Number of UHTR to test
     -d DEPTH, --depth=DEPTH
