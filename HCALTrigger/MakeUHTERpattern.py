@@ -54,6 +54,14 @@ def getEnergy( valid_, fiber, channel ):
                 return v[energy]
     return '00'
 
+while True:
+    try:
+        open('Lmap_ngHB_N_20200212.txt')
+        break
+    except FileNotFoundError:
+        print("Could not open \'Lmap_ngHB_N_20200212.txt\'. Please include the mapping file in local HCALTrigger directory")
+        raise
+
 with open('Lmap_ngHB_N_20200212.txt') as f:
     # Read in lines of the text file and split at spaces
     Lmap = f.readlines()
@@ -78,16 +86,14 @@ with open('Lmap_ngHB_N_20200212.txt') as f:
             if (d["Depth"] == options.depth or options.depth == '0'):
                 valid.append(d)
 
-    for v in valid:
-        print("%s %s\n" % (v["uHTR_FI"], v['FI_CH']))
-
-
     # Open write file and prepare for writing
     filename = options.filename + '.txt'
     outfile = open(filename, 'w')
 
     #Loop over all channels in each fiber. Write out specified value of energy (eta/phi)
     #for each channel
+    print("Writing uHTR pattern to file %s" % filename)
+
     for i_fib in range(0,NUM_FIBERS):
         capID = 0
         outfile.write('# Fiber %d\n' % i_fib)
