@@ -31,6 +31,7 @@
 
 from optparse import OptionParser
 import glob
+import re
 
 parser = OptionParser()
 parser.add_option("-o", "--output", action="store", type="string", dest="filename",
@@ -41,6 +42,12 @@ parser.add_option("-e", "--extension", action="store", type="string", dest="ext"
     default=".png", help="File extension for figures")
 
 (options, args) = parser.parse_args()
+
+def atoi(text):
+    return int(text) if text.isdigit() else text
+
+def natural_keys(text):
+    return [ atoi(c) for c in re.split(r'(\d+)', text) ]
 
 class tile:
     name = ""
@@ -109,6 +116,7 @@ with open("umn_template.tex",'r') as temp:
         for fig in glob.glob("../figures/*" + options.ext):
             l.append(fig)
 
+        l.sort(key=natural_keys)
         #print l
 
         l_div = list(divide_chunk( l, int(options.NUM_TILE) ))
